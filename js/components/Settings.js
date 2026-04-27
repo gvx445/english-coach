@@ -13,7 +13,7 @@ window.Settings = function Settings({ tone, setTone, cefr, setCefr, dark, setDar
 
   useEffect_S(() => {
     setAnonymize(window.APP_CONFIG.ANONYMIZE_BEFORE_API !== false);
-    const k = window.APP_CONFIG.GEMINI_API_KEY || '';
+    const k = window.APP_CONFIG.DEEPSEEK_API_KEY || '';
     setApiKey(k);
     setApiKeyDraft(k);
   }, []);
@@ -27,22 +27,19 @@ window.Settings = function Settings({ tone, setTone, cefr, setCefr, dark, setDar
 
   function saveKey() {
     const k = (apiKeyDraft || '').trim();
-    const lsKey = window.APP_CONFIG.GEMINI_API_KEY_LS_KEY || 'englishCoach.geminiApiKey';
+    const lsKey = window.APP_CONFIG.DEEPSEEK_API_KEY_LS_KEY || 'englishCoach.deepseekApiKey';
     if (!k) {
       // Clear
       if (!confirm('Remove the saved API key from this device?')) return;
       try { localStorage.removeItem(lsKey); } catch (_) {}
-      window.APP_CONFIG.GEMINI_API_KEY = '';
+      window.APP_CONFIG.DEEPSEEK_API_KEY = '';
       setApiKey('');
       setKeyTestResult(null);
       return;
     }
-    if (!k.startsWith('AIza')) {
-      if (!confirm("That doesn't look like a Gemini API key (Gemini keys start with 'AIza'). Save anyway?")) return;
-    }
     try { localStorage.setItem(lsKey, k); }
     catch (e) { alert('Could not save key to localStorage: ' + e.message); return; }
-    window.APP_CONFIG.GEMINI_API_KEY = k;
+    window.APP_CONFIG.DEEPSEEK_API_KEY = k;
     setApiKey(k);
     setKeyTestResult(null);
   }
@@ -51,14 +48,14 @@ window.Settings = function Settings({ tone, setTone, cefr, setCefr, dark, setDar
     setKeyTesting(true);
     setKeyTestResult(null);
     try {
-      // Cheapest possible call: 5-token completion on Flash-Lite
-      const out = await window.Gemini.generate({
-        model: window.APP_CONFIG.GEMINI_MODEL_FAST,
+      if (!window.DeepSeek) throw new Error('DeepSeek service not loaded. Try a hard refresh (Ctrl+Shift+R).');
+      const out = await window.DeepSeek.generate({
+        model: window.APP_CONFIG.DEEPSEEK_MODEL_FAST,
         prompt: 'Reply with exactly the word: ok',
         temperature: 0,
         maxTokens: 8,
       });
-      setKeyTestResult({ ok: true, msg: 'Key works. Gemini replied: "' + (out || '').trim().slice(0, 30) + '"' });
+      setKeyTestResult({ ok: true, msg: 'Key works. DeepSeek replied: "' + (out || '').trim().slice(0, 30) + '"' });
     } catch (e) {
       setKeyTestResult({ ok: false, msg: e.message });
     } finally {
@@ -130,14 +127,14 @@ window.Settings = function Settings({ tone, setTone, cefr, setCefr, dark, setDar
         </Row>
       </Section>
 
-      <Section title="Gemini API key">
+      <Section title="DeepSeek API key">
         <div className="text-xs">{keyStatus}</div>
         <div className="flex gap-2">
           <input
             type={showKey ? 'text' : 'password'}
             value={apiKeyDraft}
             onChange={(e) => setApiKeyDraft(e.target.value)}
-            placeholder="AIza…"
+            placeholder="sk-…"
             className="flex-1 px-2 py-1.5 text-sm font-mono rounded border border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-800"
             autoComplete="off"
             spellCheck="false"
@@ -173,8 +170,8 @@ window.Settings = function Settings({ tone, setTone, cefr, setCefr, dark, setDar
           </div>
         )}
         <p className="text-xs text-ink-500">
-          Get a key at <a className="underline text-accent" href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer">aistudio.google.com/apikey</a>.
-          The key is stored in this browser's localStorage — it never leaves your device, except when calling Gemini directly.
+          Get a key at <a className="underline text-accent" href="https://platform.deepseek.com/api_keys" target="_blank" rel="noreferrer">platform.deepseek.com/api_keys</a>.
+          The key is stored in this browser's localStorage — it never leaves your device, except when calling DeepSeek directly.
           Each device (laptop, phone) needs its own key set once.
         </p>
       </Section>
@@ -185,8 +182,8 @@ window.Settings = function Settings({ tone, setTone, cefr, setCefr, dark, setDar
         </Row>
         <p className="text-xs text-ink-500">
           When enabled, ticker symbols and large currency amounts are replaced with placeholders (e.g. <code>__TICKER_1__</code>) before
-          being sent to Gemini, then restored in the response. Note: on the free Gemini tier, Google may use prompts to improve their models.
-          Do not paste confidential employer data while on the free tier.
+          being sent to DeepSeek, then restored in the response.
+          Do not paste confidential employer data.
         </p>
       </Section>
 

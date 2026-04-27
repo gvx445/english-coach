@@ -16,7 +16,7 @@ const NAV = [
 ];
 
 function App() {
-  const initialKey = window.APP_CONFIG && window.APP_CONFIG.GEMINI_API_KEY;
+  const initialKey = window.APP_CONFIG && window.APP_CONFIG.DEEPSEEK_API_KEY;
   const initialNeedsKey = !initialKey || initialKey.startsWith('PASTE_');
   const [route, setRoute] = useState_App(initialNeedsKey ? 'settings' : 'editor');
   const [tone, setTone] = useState_App('equity_analyst');
@@ -39,7 +39,7 @@ function App() {
       if (savedDark != null) setDark(savedDark);
       if (savedAnon != null && window.APP_CONFIG) window.APP_CONFIG.ANONYMIZE_BEFORE_API = savedAnon;
       if (!onboardingDone) {
-        const k = window.APP_CONFIG && window.APP_CONFIG.GEMINI_API_KEY;
+        const k = window.APP_CONFIG && window.APP_CONFIG.DEEPSEEK_API_KEY;
         if (k && !k.startsWith('PASTE_')) setShowOnboarding(true);
       }
     })();
@@ -73,7 +73,7 @@ function App() {
   }
 
   // Show key-not-configured banner if needed
-  const key = window.APP_CONFIG && window.APP_CONFIG.GEMINI_API_KEY;
+  const key = window.APP_CONFIG && window.APP_CONFIG.DEEPSEEK_API_KEY;
   const needsKey = !key || key.startsWith('PASTE_');
 
   return (
@@ -137,13 +137,13 @@ function App() {
       <main className="flex-1 min-h-screen">
         {needsKey && (
           <div className="m-4 p-4 rounded bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-700 text-amber-900 dark:text-amber-200 text-sm">
-            ⚠️ Gemini API key not set on this device. Get one at{' '}
-            <a className="underline font-semibold" href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer">aistudio.google.com/apikey</a>{' '}
-            and paste it in Settings → Gemini API key.
+            ⚠️ DeepSeek API key not set on this device. Get one at{' '}
+            <a className="underline font-semibold" href="https://platform.deepseek.com/api_keys" target="_blank" rel="noreferrer">platform.deepseek.com/api_keys</a>{' '}
+            and paste it in Settings → DeepSeek API key.
           </div>
         )}
         {route === 'editor' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 p-4 h-screen">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 p-4 lg:h-screen">
             <div className="lg:col-span-2 flex flex-col min-h-0">
               <window.Editor
                 tone={tone} cefr={cefr}
@@ -151,7 +151,7 @@ function App() {
                 onAnalysis={setAnalysis}
               />
             </div>
-            <div className="lg:col-span-1 h-[600px] lg:h-auto min-h-0">
+            <div className="lg:col-span-1 lg:h-auto min-h-0">
               <window.InsightPanel
                 analysis={analysis} text={editorText}
                 tone={tone} cefr={cefr}

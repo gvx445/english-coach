@@ -41,7 +41,7 @@ window.InsightPanel = function InsightPanel({ analysis, text, tone, cefr, onAppl
     if (explanations[idx]) return;
     setLoadingExplain((s) => ({ ...s, [idx]: true }));
     try {
-      const res = await window.Gemini.explainIssue({
+      const res = await window.DeepSeek.explainIssue({
         original: issue.original,
         correction: issue.suggestion,
         category: issue.category,
@@ -78,7 +78,7 @@ window.InsightPanel = function InsightPanel({ analysis, text, tone, cefr, onAppl
     if (!text || text.length < 30) return;
     setLoadingRewrite(true);
     try {
-      const r = await window.Gemini.rewriteText({ text, tone, mode });
+      const r = await window.DeepSeek.rewriteText({ text, tone, mode });
       setRewrites(r);
       setTab('rewrites');
     } catch (e) {

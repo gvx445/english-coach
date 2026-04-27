@@ -115,17 +115,17 @@ window.Editor = function Editor({ tone, cefr, onAnalysis, onText }) {
       // 3) LLM analysis
       let llm = null;
       try {
-        llm = await window.Gemini.analyzeWriting({ text: t, tone, cefr });
+        llm = await window.DeepSeek.analyzeWriting({ text: t, tone, cefr });
         if (llm && Array.isArray(llm.issues)) {
           llm.issues.forEach((iss) => {
             const off = t.indexOf(iss.original);
             if (off >= 0) { iss.offset = off; iss.length = iss.original.length; }
-            iss.source = 'gemini';
+            iss.source = 'deepseek';
           });
           allIssues.push(...llm.issues);
         }
       } catch (e) {
-        setError('Gemini: ' + e.message);
+        setError('DeepSeek: ' + e.message);
       }
 
       const uniq = dedupeIssues(allIssues);
