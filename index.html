@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Coach — Equity Analyst Edition</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="assets/icon-192.png" />
+  <meta name="theme-color" content="#0f172a" />
+
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            ink: {
+              50:  '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1',
+              400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155',
+              800: '#1e293b', 900: '#0f172a',
+            },
+            accent:       '#0ea5e9',
+            'accent-hover': '#0284c7',
+          },
+          fontFamily: {
+            serif: ['"Source Serif Pro"', 'Georgia', 'serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Quill (rich text editor) -->
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+
+  <!-- React 18 UMD -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+  <!-- Babel standalone (compiles JSX in browser) -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Recharts (for Dashboard) -->
+  <script src="https://unpkg.com/recharts@2.12.7/umd/Recharts.min.js"></script>
+  <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+
+  <!-- App styles -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="bg-ink-50 dark:bg-ink-900 text-ink-900 dark:text-ink-100 antialiased">
+
+  <div id="root"></div>
+
+  <!-- Configuration (must come first) -->
+  <script src="config.local.js"></script>
+
+  <!-- Data layer (no React, plain JS) -->
+  <script src="js/data/prompts.js"></script>
+  <script src="js/data/italian-traps.js"></script>
+  <script src="js/data/finance-lexicon.js"></script>
+
+  <!-- Services (no React, plain JS) -->
+  <script src="js/services/storage.js"></script>
+  <script src="js/services/anonymizer.js"></script>
+  <script src="js/services/gemini.js"></script>
+  <script src="js/services/languageTool.js"></script>
+  <script src="js/services/srs.js"></script>
+  <script src="js/services/embeddings.js"></script>
+
+  <!-- Utils (no React) -->
+  <script src="js/utils/diff.js"></script>
+  <script src="js/utils/cefr.js"></script>
+
+  <!-- Components (JSX, compiled by Babel) -->
+  <script type="text/babel" data-presets="react" src="js/components/Editor.js"></script>
+  <script type="text/babel" data-presets="react" src="js/components/InsightPanel.js"></script>
+  <script type="text/babel" data-presets="react" src="js/components/Vocabulary.js"></script>
+  <script type="text/babel" data-presets="react" src="js/components/MirrorWriting.js"></script>
+  <script type="text/babel" data-presets="react" src="js/components/EarningsDrill.js"></script>
+  <script type="text/babel" data-presets="react" src="js/components/ReportBuilder.js"></script>
+  <script type="text/babel" data-presets="react" src="js/components/WeeklyChallenge.js"></script>
+  <script type="text/babel" data-presets="react" src="js/components/Dashboard.js"></script>
+  <script type="text/babel" data-presets="react" src="js/components/ImportData.js"></script>
+  <script type="text/babel" data-presets="react" src="js/components/Settings.js"></script>
+  <script type="text/babel" data-presets="react" src="js/components/Onboarding.js"></script>
+
+  <!-- Main app (JSX) -->
+  <script type="text/babel" data-presets="react" src="js/app.js"></script>
+
+  <!-- Service worker (PWA) -->
+  <script>
+    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js').catch(() => {});
+      });
+    }
+  </script>
+
+  <!-- Initial loader (replaced by React on mount) -->
+  <script>
+    document.getElementById('root').innerHTML = `
+      <div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:sans-serif;color:#94a3b8;">
+        <div style="width:64px;height:64px;border:3px solid #1e293b;border-top-color:#0ea5e9;border-radius:50%;animation:spin 1s linear infinite;"></div>
+        <div style="margin-top:16px;font-size:16px;font-weight:600;color:#cbd5e1;">English Coach</div>
+        <div style="margin-top:4px;font-size:12px;">Loading…</div>
+      </div>
+      <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+    `;
+  </script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+# Standard ignores. config.local.js is safe to commit because the API key
+# is stored in localStorage, not in this file.
+.DS_Store
+node_modules/
+*.log
