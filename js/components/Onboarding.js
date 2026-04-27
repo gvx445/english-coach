@@ -76,7 +76,7 @@ window.Onboarding = function Onboarding({ onDone }) {
   if (step >= PROMPTS_PT.length) {
     if (!loading) {
       setLoading(true);
-      window.Gemini.placementTest({
+      window.DeepSeek.placementTest({
         samples: PROMPTS_PT.map((p) => answers[p.id] || ''),
       }).then((r) => {
         setResult(r);
